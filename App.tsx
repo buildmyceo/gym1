@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -9,10 +10,37 @@ import Membership from './components/Membership';
 import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import Button from './components/ui/Button';
+import SplashScreen from './components/SplashScreen';
 
 const App: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Lock scroll during splash screen
+    document.body.style.overflow = 'hidden';
+
+    // Simulate loading time
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      
+      // Unlock scroll after transition finishes (approx 0.8s)
+      setTimeout(() => {
+        document.body.style.overflow = 'unset';
+      }, 800);
+    }, 2500);
+
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-brand-black text-brand-offwhite font-sans selection:bg-brand-gold selection:text-brand-black">
+      <AnimatePresence mode="wait">
+        {isLoading && <SplashScreen />}
+      </AnimatePresence>
+
       <Navbar />
       
       <main>
